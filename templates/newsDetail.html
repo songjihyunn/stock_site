@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .large-bold-title {
+            font-size: 32px;
+            font-weight: bold;
+            padding-bottom: 10px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+            overflow-y: auto;
+            padding-bottom: 50px;
+            max-width: 1500px;
+        }
+        .left-content {
+            width: 70%;
+            padding-right: 20px;
+        }
+        .right-content {
+            width: 30%;
+        }
+        .news-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 50px;
+        }
+        .news-table th, .news-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .news-table th {
+            text-align: left;
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+        .news-content {
+            white-space: pre-line;
+            font-size: 18px;
+        }
+        .related-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: left;
+            padding-top: 8px;
+        }
+        .news-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            padding-bottom: 15px;
+        }
+        .sentiment-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        .positive {
+            color: blue; /* 긍정적인 경우 파란색 */
+        }
+        .negative {
+            color: red; /* 부정적인 경우 빨간색 */
+        }
+        .neutral {
+            color: black; /* 중립적인 경우 검정색 */
+        }
+        .stock-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .stock-link {
+            text-decoration: none;
+            color: #007bff;
+            display: block;
+        }
+        .stock-link:hover {
+            text-decoration: none;
+        }
+        .text-muted {
+            display: block;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-content">
+            <table class="news-table">
+                <tr>
+                    <th colspan="2" class="large-bold-title">{{ news.title }}</th>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: left; font-weight: bold;">조회수: {{ news.viewcnt }}</td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top;">
+                        {% if news.imageFileNames %}
+                            <img src="{{ url_for('static', filename='img/' + news.imageFileNames) }}" alt="News Image" class="news-image">
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="news-content">{{ news.content }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; padding-top: 10px;">
+                        <a href="{{ url_for('news') }}" class="btn btn-outline-dark">돌아가기</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="right-content">
+            <table class="news-table">
+                <tr>
+                    <td>
+                        <div class="related-title">감정 분석 결과</div>
+                        <div class="emotion-analysis">
+                            <p class="sentiment-text {% if news.sentimentPrediction == '긍정' %}positive{% elif news.sentimentPrediction == '부정' %}negative{% else %}neutral{% endif %}">
+                                {{ news.sentimentPrediction }}
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="related-title" colspan="3">관련 항목</th>
+                    <th>{{news.stockCode}}</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

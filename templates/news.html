@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>특정 데이터 표시</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">특정 데이터 표시</h1>
+
+        <!-- 검색 폼 -->
+        <form method="post" class="mb-4">
+            <div class="form-group">
+                <label for="search_keyword">검색어:</label>
+                <input type="text" id="search_keyword" name="search_keyword" class="form-control" placeholder="검색어를 입력하세요">
+            </div>
+            <button type="submit" class="btn btn-primary">검색</button>
+        </form>
+
+        <!-- 데이터 테이블 -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th>내용</th>
+                        <th>이미지</th>
+                        <th>감정분석</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data %}
+                        {% for item in data %}
+                            <tr>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.content }}</td>
+                                <td>
+                                    {% if item.imageFileNames %}
+                                        <img src="{{ url_for('send_image', filename=item.imageFileNames) }}" style="max-width:100px; max-height:100px;" alt="이미지 없음">
+                                    {% else %}
+                                        이미지 없음
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.sentimentPrediction }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3">검색 결과가 없습니다.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

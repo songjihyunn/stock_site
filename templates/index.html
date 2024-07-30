@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뉴스 데이터</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+            width: 1200px;
+            height: 1200px;
+        }
+        .content-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+        .news-container {
+            flex: 1;
+            margin: 20px;
+            width: 50%;
+        }
+        a:hover {
+            text-decoration: underline !important;
+        }
+        .card {
+            height: 300px;
+            overflow: auto;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Content Section -->
+        <div class="content-container">
+            <div class="news-container">
+                <div id="news-content" style="width: 100%;">
+                    <!-- 엑셀 데이터를 반복하여 출력 -->
+                    {% if index_data %}
+                        {% for news in index_data %}
+                            <div>
+                                <p style="margin-bottom:0;">
+                                    {{news.id}}
+                                </p>
+                                <strong>
+                                    <a href="/indexDetail?id={{ news.id }}&stockCode={{ news.stockCode }}" style="text-decoration: none; color: black;">
+                                        {{ news.title}}
+                                    </a>
+                                </strong>
+                                <p style="margin-bottom: 0;">
+                                    {{ news.content | slice(0, 100) }}{{ '...' if news.content | length > 100 else '' }}
+                                </p>
+                            </div>
+                            <hr style="border-top: 1px solid #ddd; margin: 10px;">
+                        {% endfor %}
+                    {% else %}
+                        <p>데이터가 없습니다.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

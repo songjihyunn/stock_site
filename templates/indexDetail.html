@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${news.title}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .large-bold-title {
+            font-size: 32px;
+            font-weight: bold;
+            padding-bottom: 10px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+            margin-bottom: 150px;
+        }
+        .left-content {
+            width: 70%;
+            padding-right: 20px;
+        }
+        .right-content {
+            width: 30%;
+        }
+        .news-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .news-table th, .news-table td {
+            border: 0px solid #ddd;
+            padding: 5px;
+        }
+        .news-table th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: left;
+        }
+        .news-content {
+            width: 100%;
+            white-space: pre-line;
+            font-size: 18px;
+        }
+        .info-table {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .info-table .stock-code {
+            border-radius: 8px;
+            padding: 8px 12px;
+            text-align: center;
+            font-weight: bold;
+            width: 100px; /* 3개의 열로 나누기 */
+            margin-bottom: 10px;
+        }
+        .related-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: left;
+            padding-top: 8px;
+        }
+        .news-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            padding-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="left-content">
+        <table class="news-table">
+            <tr>
+                <th colspan="2" class="large-bold-title">${news.title}</th>
+            </tr>
+            <tr>
+                <td colspan="2" style="font-size: 15px; text-align: left;">${news.date}</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top;">
+                    {% if news.imageFileNames %}
+                        <img src="{{ url_for('static', filename='index_image/' + news.imageFileNames) }}" alt="News Image" class="news-image">
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="news-content" id="newsContent">${news.content}</td>
+            </tr>
+            <tr>
+                <td style="padding-top: 20px; text-align: right">
+                    <a href="/" class="btn btn-outline-dark">돌아가기</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="right-content">
+        {% if news.stockCode %}
+            <div class="related-title">관련 항목</div>
+            <div class="info-table">
+                {% set stockCodes = news.stockCode.replace(',', '') %}
+                {% set stockCodesArray = stockCodes.split(' ') %}
+
+                <table style="table-layout: fixed; width: 100%;">
+                    {% for stockCode in stockCodesArray %}
+                        {% if loop.index0 % 3 == 0 %}
+                            {% if loop.index > 0 %}
+                                </tr>
+                            {% endif %}
+                            <tr>
+                        {% endif %}
+                        <td style="width: 100px;">
+                            <div class="stock-code">
+                                {% set foundInStockList = false %}
+                                {% for stock in stockList %}
+                                    {% if stock.stockcode == stockCode %}
+                                        <div class="stock-item" style="border: 1px solid #ddd; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); padding: 10px;">
+                                            <a href="{{ url_for('stock_view', id=stock.id, stockcode=stock.stockcode) }}" class="stock-link">
+                                                {{ stock.stockcode }}
+                                            </a>
+                                        </div>
+                                        {% set foundInStockList = true %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if not foundInStockList %}
+                                    <div class="stock-item" style="border: 1px solid #ddd; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); padding: 10px;">
+                                        <span class="text-muted">{{ stockCode }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        {% if loop.index0 % 3 == 2 or loop.last %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
