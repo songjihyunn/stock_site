@@ -46,3 +46,4 @@
 
 
 ## 프로젝트 아키텍처
+![3번째 프로젝트 아키텍처](https://github.com/user-attachments/assets/827be4af-c089-4fc0-95a2-c4fbf91185c3)
